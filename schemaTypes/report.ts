@@ -1,14 +1,26 @@
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
-  name: 'post',
-  title: 'Блог',
+  name: 'report',
+  title: 'Звіт',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Назва запису',
+      title: 'Назва звіту',
       type: 'localizedString',
+      validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'date',
+      title: 'Дата звіту',
+      type: 'localizedString',
+      validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'link',
+      title: 'Посилання на звіт',
+      type: 'url',
       validation: rule => rule.required(),
     }),
     defineField({
