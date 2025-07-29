@@ -30,7 +30,7 @@ export default defineType({
       // validation: rule => rule.required(),
       options: {
         // @ts-expect-error
-        source: doc => doc.title?.en,
+        source: doc => doc.date?.en,
         maxLength: 96,
       },
     }),

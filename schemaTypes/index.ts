@@ -7,5 +7,6 @@ import localizedBlockContent from "./objects/localizedBlockContent";
 import tail from "./tail";
 import post from "./post";
 import report from "./report";
+import events from "./events";
 
-export const schemaTypes = [tail, post, report, blockContent, localizedString, localizedBlockContent]
+export const schemaTypes = [events, tail, post, report, blockContent, localizedString, localizedBlockContent]

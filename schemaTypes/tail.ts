@@ -45,7 +45,7 @@ export default defineType({
         {
           type: 'image',
           options: {
-            hotspot: true // позволяет настраивать фокус изображения
+            hotspot: true
           },
         }
       ]
@@ -65,12 +65,46 @@ export default defineType({
     defineField({
       name: 'needs_sterilization',
       title: 'Потребує стерилізації',
-      type: 'boolean'
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'sterilization_price',
+      title: 'Сума для стерілізації',
+      type: 'number',
+      hidden: ({ parent }) => !parent?.needs_sterilization,
+      validation: Rule => Rule.custom((value, context) => {
+        //@ts-expect-error
+        const isPromo = context.parent?.needs_sterilization
+    
+        if (isPromo && !value) {
+          return 'Введіть суму стерилізації'
+        }
+    
+        return true 
+      })
     }),
     defineField({
       name: 'needs_family',
       title: 'Потребує сім\'ї',
-      type: 'boolean'
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'keeping_price',
+      title: 'Сума для місячного утримання',
+      type: 'number',
+      hidden: ({ parent }) => !parent?.needs_family,
+      validation: Rule => Rule.custom((value, context) => {
+        //@ts-expect-error
+        const isPromo = context.parent?.needs_family
+    
+        if (isPromo && !value) {
+          return 'Введіть суму місячного утримання'
+        }
+    
+        return true 
+      })
     }),
   ],
   preview: {
