@@ -63,30 +63,14 @@ export default defineType({
       }
     }),
     defineField({
-      name: 'needs_sterilization',
-      title: 'Потребує стерилізації',
+      name: 'needs_family',
+      title: 'Потребує сім\'ї',
       type: 'boolean',
       initialValue: true,
     }),
     defineField({
-      name: 'sterilization_price',
-      title: 'Сума для стерілізації',
-      type: 'number',
-      hidden: ({ parent }) => !parent?.needs_sterilization,
-      validation: Rule => Rule.custom((value, context) => {
-        //@ts-expect-error
-        const isPromo = context.parent?.needs_sterilization
-    
-        if (isPromo && !value) {
-          return 'Введіть суму стерилізації'
-        }
-    
-        return true 
-      })
-    }),
-    defineField({
-      name: 'needs_family',
-      title: 'Потребує сім\'ї',
+      name: 'needs_keeping',
+      title: 'Потребує опіки',
       type: 'boolean',
       initialValue: true,
     }),
@@ -94,10 +78,10 @@ export default defineType({
       name: 'keeping_price',
       title: 'Сума для місячного утримання',
       type: 'number',
-      hidden: ({ parent }) => !parent?.needs_family,
+      hidden: ({ parent }) => !parent?.needs_keeping,
       validation: Rule => Rule.custom((value, context) => {
         //@ts-expect-error
-        const isPromo = context.parent?.needs_family
+        const isPromo = context.parent?.needs_keeping
     
         if (isPromo && !value) {
           return 'Введіть суму місячного утримання'
@@ -112,9 +96,5 @@ export default defineType({
       title: 'name.uk',
       media: 'mainImage',
     },
-    // prepare(selection) {
-    //   const {author} = selection
-    //   return {...selection, subtitle: author && `by ${author}`}
-    // },
   },
 })
