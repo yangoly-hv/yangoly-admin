@@ -1,14 +1,14 @@
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
-  name: 'donanor',
+  name: 'donator',
   title: 'Топ донаторів',
   type: 'document',
   fields: [
     defineField({
       name: 'name',
       title: 'ПІБ донатора',
-      type: 'string',
+      type: 'localizedString',
       validation: rule => rule.required(),
     }),
     defineField({
