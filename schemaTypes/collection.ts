@@ -43,6 +43,11 @@ export default defineType({
         type: 'number',
       }),
       defineField({
+        name: 'amountCollected',
+        title: 'Зібрано',
+        type: 'number',
+      }),
+      defineField({
         name: 'main',
         title: 'Головний збір',
         type: 'boolean',
