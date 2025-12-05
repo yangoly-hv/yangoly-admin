@@ -48,21 +48,9 @@ export default defineType({
       ]
     }),
     defineField({
-      name: 'food',
-      title: 'Допомога кормом',
-      type: 'localizedString',
-      validation: rule => rule.required(),
-    }),
-    defineField({
       name: 'foodDescription',
       title: 'Опис допомоги кормом',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
-    }),
-    defineField({
-      name: 'house',
-      title: 'Житло для хвостиків',
-      type: 'localizedString',
       validation: rule => rule.required(),
     }),
     defineField({
@@ -72,21 +60,9 @@ export default defineType({
       validation: rule => rule.required(),
     }),
     defineField({
-      name: 'therapy',
-      title: 'Лікування хвостиків',
-      type: 'localizedString',
-      validation: rule => rule.required(),
-    }),
-    defineField({
       name: 'therapyDescription',
       title: 'Опис лікування хвостиків',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
-    }),
-    defineField({
-      name: 'other',
-      title: 'Інше',
-      type: 'localizedString',
       validation: rule => rule.required(),
     }),
     defineField({

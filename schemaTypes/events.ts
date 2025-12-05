@@ -2,7 +2,7 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'events',
-  title: 'Наші заходи',
+  title: 'Про наші благодійні заходи',
   type: 'document',
   fields: [
     {
@@ -25,8 +25,10 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {
-      title: 'title.uk',
+    prepare() {
+      return {
+        title: 'Про наші благодійні заходи'
+      };
     },
   },
 })
