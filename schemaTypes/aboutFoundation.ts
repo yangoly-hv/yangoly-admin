@@ -16,8 +16,19 @@ export default defineType({
       type: 'localizedBlockContent',
     }),
     defineField({
-      name: 'images',
-      title: 'Фото фонду',
+      name: 'imagesDesktop',
+      title: 'Фото фонду для комп\'ютера',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+      ],
+    }),
+    defineField({
+      name: 'imagesMobile',
+      title: 'Фото для телефону',
       type: 'array',
       of: [
         {
