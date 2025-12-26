@@ -7,7 +7,8 @@ export default defineType({
   fields: [
     { name: 'tailsCount', type: 'number', title: 'Кількість врятованих хвостиків' },
     { name: 'feedCount', type: 'number', title: 'Кількість надісленого корму в кілограмах' },
-    { name: 'medCount', type: 'number', title: 'Кількість вакцин, обробок, консерв' },
+    { name: 'vaccinesCount', type: 'number', title: 'Кількість вакцин' },
+    { name: 'treatmentsCount', type: 'number', title: 'Кількість обробок' },
   ],
   preview: {
     prepare() {
