@@ -13,5 +13,6 @@ import donator from './donator';
 import perfomance from './perfomance';
 import aboutFoundation from './aboutFoundation';
 import aboutFounders from './aboutFounders';
+import donateOrder from './donateOrder';
 
-export const schemaTypes = [aboutFounders, aboutFoundation, perfomance, donator, collection, events, tail, post, report, blockContent, localizedString, localizedBlockContent]
+export const schemaTypes = [donateOrder, aboutFounders, aboutFoundation, perfomance, donator, collection, events, tail, post, report, blockContent, localizedString, localizedBlockContent]

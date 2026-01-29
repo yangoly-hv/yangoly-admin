@@ -36,6 +36,7 @@ export const myStructure = (S) =>
 
       // Важное: исключаем singleton-документы из списка всех типов
       ...S.documentTypeListItems().filter(
-        (item) => !singletonTypes.has(item.getId())
+        (item) => !singletonTypes.has(item.getId()) &&
+        item.getId() !== 'donateOrder'
       ),
     ]);
