@@ -15,12 +15,10 @@ import collection from './collection'
 import donator from './donator'
 import perfomance from './perfomance'
 import aboutFoundation from './aboutFoundation'
-import aboutFounders from './aboutFounders'
 import donateOrder from './donateOrder'
 
 export const schemaTypes = [
   donateOrder,
-  aboutFounders,
   aboutFoundation,
   perfomance,
   donator,

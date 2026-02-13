@@ -1,6 +1,6 @@
 // deskStructure.js
 
-const singletonTypes = new Set(['events', 'perfomance', 'aboutFoundation', "aboutFounders"]);
+const singletonTypes = new Set(['events', 'perfomance', 'aboutFoundation']);
 
 export const myStructure = (S) =>
   S.list()
@@ -24,14 +24,6 @@ export const myStructure = (S) =>
           S.document()
             .schemaType('aboutFoundation')
             .documentId('aboutFoundation')
-        ),
-
-        S.listItem()
-        .title('Про співзасновників фонда')
-        .child(
-          S.document()
-            .schemaType('aboutFounders')
-            .documentId('aboutFounders')
         ),
 
       // Важное: исключаем singleton-документы из списка всех типов
