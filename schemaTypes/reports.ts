@@ -17,12 +17,6 @@ export default defineType({
       type: 'localizedString',
       validation: rule => rule.required(),
     }),
-    // defineField({
-    //   name: 'link',
-    //   title: 'Посилання на звіт',
-    //   type: 'url',
-    //   validation: rule => rule.required(),
-    // }),
     defineField({
       name: 'slug',
       title: 'Slug',
