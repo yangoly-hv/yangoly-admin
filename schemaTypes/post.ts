@@ -9,16 +9,16 @@ export default defineType({
       name: 'title',
       title: 'Назва запису',
       type: 'localizedString',
-      validation: rule => rule.required(),
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      // validation: rule => rule.required(),
+      description: 'Автоматично з англійської назви, можна змінити вручну',
+      validation: (rule) => rule.required(),
       options: {
-        // @ts-expect-error
-        source: doc => doc.title?.en,
+        source: (doc: {title?: {en?: string}}) => doc?.title?.en ?? '',
         maxLength: 96,
       },
     }),
@@ -26,39 +26,54 @@ export default defineType({
       name: 'description',
       title: 'Опис',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
-    }),
-    defineField({
-      name: 'additionalInfo',
-      title: 'Додаткова інформація',
-      type: 'localizedBlockContent',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'mainImage',
       title: 'Головне фото',
       type: 'image',
-      options: {
-        hotspot: true,
-      },
-      validation: rule => rule.required(),
+      options: {hotspot: true},
+      validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'secondaryImage',
-      title: 'Друге фото',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
+      name: 'publishedAt',
+      title: 'Дата та час публікації',
+      type: 'datetime',
+      description: 'Встановлюється при створенні, можна змінити',
+      initialValue: () => new Date().toISOString(),
+    }),
+    defineField({
+      name: 'readingTime',
+      title: 'Час читання (хв)',
+      type: 'number',
+      description: 'Опційно. Орієнтовна кількість хвилин на прочитання',
+      validation: (rule) => rule.min(0).max(999),
+    }),
+    defineField({
+      name: 'content',
+      title: 'Контент',
+      type: 'array',
+      of: [
+        {type: 'blogPlainTextBlock'},
+        {type: 'blogTextWithImageBlock'},
+        {type: 'blogSingleImageBlock'},
+        {type: 'blogGalleryBlock'},
+      ],
     }),
   ],
   preview: {
     select: {
       title: 'title.uk',
       media: 'mainImage',
+      publishedAt: 'publishedAt',
     },
-    // prepare(selection) {
-    //   const {author} = selection
-    //   return {...selection, subtitle: author && `by ${author}`}
-    // },
+    prepare({title, media, publishedAt}) {
+      const date = publishedAt ? new Date(publishedAt).toLocaleDateString('uk-UA') : ''
+      return {
+        title: title || 'Без назви',
+        subtitle: date,
+        media,
+      }
+    },
   },
 })
