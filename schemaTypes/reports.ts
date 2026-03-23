@@ -1,4 +1,5 @@
-import {defineField, defineType} from 'sanity'
+import {defineField, defineType, defineArrayMember} from 'sanity'
+import { BulkImageArrayInput } from './objects/BulkImageArrayInput'
 
 export default defineType({
   name: 'reports',
@@ -33,37 +34,68 @@ export default defineType({
       title: 'Фото для звіту',
       type: 'array',
       of: [
-        {
+        defineArrayMember({
           type: 'image',
           options: {
-            hotspot: true
+            hotspot: true,
           },
-        }
-      ]
+        }),
+      ],
+      options: {
+        layout: 'grid',
+        disableActions: ['add'],
+      },
+      components: {
+        input: BulkImageArrayInput,
+      },
+    }),
+    defineField({
+      name: 'shortFoodDescription',
+      title: 'Короткий опис допомоги кормом',
+      type: 'localizedBlockContent',
+      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'foodDescription',
       title: 'Опис допомоги кормом',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
+      // validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'shortHouseDescription',
+      title: 'Короткий опис житла для хвостиків',
+      type: 'localizedBlockContent',
+      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'houseDescription',
       title: 'Опис житла для хвостиків',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
+      // validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'shortTherapyDescription',
+      title: 'Короткий опис лікування хвостиків',
+      type: 'localizedBlockContent',
+      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'therapyDescription',
       title: 'Опис лікування хвостиків',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
+      // validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'shortOtherDescription',
+      title: 'Короткий опис іншої допомоги',
+      type: 'localizedBlockContent',
+      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'otherDescription',
       title: 'Опис іншої допомоги',
       type: 'localizedBlockContent',
-      validation: rule => rule.required(),
+      // validation: rule => rule.required(),
     }),
   ],
   preview: {
