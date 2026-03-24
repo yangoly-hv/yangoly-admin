@@ -1,6 +1,21 @@
 import {defineField, defineType, defineArrayMember} from 'sanity'
 import { BulkImageArrayInput } from './objects/BulkImageArrayInput'
 
+const MONTHS_EN = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december',
+];
+
 export default defineType({
   name: 'reports',
   title: 'Звіти',
@@ -12,20 +27,34 @@ export default defineType({
       type: 'localizedString',
       validation: rule => rule.required(),
     }),
+    // defineField({
+    //   name: 'date',
+    //   title: 'Дата звіту',
+    //   type: 'localizedString',
+    //   validation: rule => rule.required(),
+    // }),
     defineField({
       name: 'date',
       title: 'Дата звіту',
-      type: 'localizedString',
-      validation: rule => rule.required(),
+      type: 'reportMonthYear',
+      // validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      // validation: rule => rule.required(),
+      validation: rule => rule.required(),
       options: {
-        // @ts-expect-error
-        source: doc => doc.date?.en,
+        source: (doc) => {
+          //@ts-expect-error
+          const year = doc.date?.year
+          //@ts-expect-error
+          const month = doc.date?.month
+    
+          if (!year || !month) return ''
+    
+          return `${MONTHS_EN[month - 1]}-${year}`
+        },
         maxLength: 96,
       },
     }),

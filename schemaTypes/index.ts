@@ -16,8 +16,10 @@ import donator from './donator'
 import perfomance from './perfomance'
 import aboutFoundation from './aboutFoundation'
 import donateOrder from './donateOrder'
+import reportMonthYear from './objects/reportMonthYear'
 
 export const schemaTypes = [
+  reportMonthYear,
   donateOrder,
   aboutFoundation,
   perfomance,
