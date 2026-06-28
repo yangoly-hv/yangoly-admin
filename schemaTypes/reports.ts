@@ -1,5 +1,10 @@
 import {defineField, defineType, defineArrayMember} from 'sanity'
 import { BulkImageArrayInput } from './objects/BulkImageArrayInput'
+import {
+  AutoSlugFromReportDateInput,
+  isUniqueDocumentSlug,
+  slugifyDocumentValue,
+} from './objects/autoSlug'
 
 const MONTHS_EN = [
   'january',
@@ -38,6 +43,9 @@ export default defineType({
       title: 'Дата звіту',
       type: 'reportMonthYear',
       // validation: (Rule) => Rule.required(),
+      components: {
+        input: AutoSlugFromReportDateInput,
+      },
     }),
     defineField({
       name: 'slug',
@@ -55,6 +63,8 @@ export default defineType({
     
           return `${MONTHS_EN[month - 1]}-${year}`
         },
+        slugify: input => slugifyDocumentValue(input).slice(0, 96),
+        isUnique: isUniqueDocumentSlug,
         maxLength: 96,
       },
     }),

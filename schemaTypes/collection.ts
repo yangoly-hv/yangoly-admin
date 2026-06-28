@@ -1,4 +1,9 @@
 import {defineField, defineType} from 'sanity'
+import {
+  AutoSlugFromLocalizedStringInput,
+  isUniqueDocumentSlug,
+  slugifyDocumentValue,
+} from './objects/autoSlug'
 
 export default defineType({
   name: 'collection',
@@ -10,15 +15,20 @@ export default defineType({
       title: 'Назва збору',
       type: 'localizedString',
       validation: rule => rule.required(),
+      components: {
+        input: AutoSlugFromLocalizedStringInput,
+      },
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      // validation: rule => rule.required(),
+      validation: rule => rule.required(),
       options: {
         // @ts-expect-error
-        source: doc => doc.title?.en,
+        source: doc => doc.title?.en || doc.title?.uk,
+        slugify: input => slugifyDocumentValue(input).slice(0, 96),
+        isUnique: isUniqueDocumentSlug,
         maxLength: 96,
       },
     }),
