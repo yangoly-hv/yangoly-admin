@@ -3,7 +3,15 @@ import {
   AutoSlugFromLocalizedStringInput,
   isUniqueDocumentSlug,
   slugifyDocumentValue,
+  sourceFromLocalizedString,
 } from './objects/autoSlug'
+
+type CollectionDocument = {
+  title?: {
+    en?: string
+    uk?: string
+  }
+}
 
 export default defineType({
   name: 'collection',
@@ -25,8 +33,7 @@ export default defineType({
       type: 'slug',
       validation: rule => rule.required(),
       options: {
-        // @ts-expect-error
-        source: doc => doc.title?.en || doc.title?.uk,
+        source: doc => sourceFromLocalizedString((doc as CollectionDocument).title),
         slugify: input => slugifyDocumentValue(input).slice(0, 96),
         isUnique: isUniqueDocumentSlug,
         maxLength: 96,

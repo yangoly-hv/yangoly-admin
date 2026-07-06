@@ -3,7 +3,21 @@ import {
   AutoSlugFromLocalizedStringInput,
   isUniqueDocumentSlug,
   slugifyDocumentValue,
+  sourceFromLocalizedString,
 } from './objects/autoSlug'
+import {TailImageInput} from './objects/TailImageInput'
+import {validateTailImageCrop} from './objects/tailImageCrop'
+
+type TailDocument = {
+  name?: {
+    en?: string
+    uk?: string
+  }
+}
+
+type KeepingParent = {
+  needs_keeping?: boolean
+}
 
 export default defineType({
   name: 'tail',
@@ -25,8 +39,7 @@ export default defineType({
       type: 'slug',
       validation: rule => rule.required(),
       options: {
-        // @ts-expect-error
-        source: doc => doc.name?.en || doc.name?.uk,
+        source: doc => sourceFromLocalizedString((doc as TailDocument).name),
         slugify: input => slugifyDocumentValue(input).slice(0, 96),
         isUnique: isUniqueDocumentSlug,
         maxLength: 96,
@@ -42,10 +55,14 @@ export default defineType({
       name: 'mainImage',
       title: 'Головне фото',
       type: 'image',
+      description: 'Завантажте фото і натисніть "Застосувати кадр 1.2:1".',
       options: {
         hotspot: true,
       },
-      validation: rule => rule.required(),
+      components: {
+        input: TailImageInput,
+      },
+      validation: rule => rule.required().custom(validateTailImageCrop),
     }),
     defineField({
       name: 'images',
@@ -54,9 +71,14 @@ export default defineType({
       of: [
         {
           type: 'image',
+          description: 'Для кожного фото натисніть "Застосувати кадр 1.2:1".',
           options: {
             hotspot: true
           },
+          components: {
+            input: TailImageInput,
+          },
+          validation: rule => rule.custom(validateTailImageCrop),
         }
       ]
     }),
@@ -96,8 +118,7 @@ export default defineType({
       type: 'number',
       hidden: ({ parent }) => !parent?.needs_keeping,
       validation: Rule => Rule.custom((value, context) => {
-        //@ts-expect-error
-        const isPromo = context.parent?.needs_keeping
+        const isPromo = (context.parent as KeepingParent | undefined)?.needs_keeping
     
         if (isPromo && !value) {
           return 'Введіть суму місячного утримання'

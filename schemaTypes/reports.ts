@@ -4,22 +4,15 @@ import {
   AutoSlugFromReportDateInput,
   isUniqueDocumentSlug,
   slugifyDocumentValue,
+  sourceFromReportDate,
 } from './objects/autoSlug'
 
-const MONTHS_EN = [
-  'january',
-  'february',
-  'march',
-  'april',
-  'may',
-  'june',
-  'july',
-  'august',
-  'september',
-  'october',
-  'november',
-  'december',
-];
+type ReportDocument = {
+  date?: {
+    month?: number
+    year?: number
+  }
+}
 
 export default defineType({
   name: 'reports',
@@ -32,17 +25,10 @@ export default defineType({
       type: 'localizedString',
       validation: rule => rule.required(),
     }),
-    // defineField({
-    //   name: 'date',
-    //   title: 'Дата звіту',
-    //   type: 'localizedString',
-    //   validation: rule => rule.required(),
-    // }),
     defineField({
       name: 'date',
       title: 'Дата звіту',
       type: 'reportMonthYear',
-      // validation: (Rule) => Rule.required(),
       components: {
         input: AutoSlugFromReportDateInput,
       },
@@ -53,16 +39,7 @@ export default defineType({
       type: 'slug',
       validation: rule => rule.required(),
       options: {
-        source: (doc) => {
-          //@ts-expect-error
-          const year = doc.date?.year
-          //@ts-expect-error
-          const month = doc.date?.month
-    
-          if (!year || !month) return ''
-    
-          return `${MONTHS_EN[month - 1]}-${year}`
-        },
+        source: (doc) => sourceFromReportDate((doc as ReportDocument).date),
         slugify: input => slugifyDocumentValue(input).slice(0, 96),
         isUnique: isUniqueDocumentSlug,
         maxLength: 96,
@@ -92,49 +69,41 @@ export default defineType({
       name: 'shortFoodDescription',
       title: 'Короткий опис допомоги кормом',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'foodDescription',
       title: 'Опис допомоги кормом',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'shortHouseDescription',
       title: 'Короткий опис житла для хвостиків',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'houseDescription',
       title: 'Опис житла для хвостиків',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'shortTherapyDescription',
       title: 'Короткий опис лікування хвостиків',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'therapyDescription',
       title: 'Опис лікування хвостиків',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'shortOtherDescription',
       title: 'Короткий опис іншої допомоги',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
     defineField({
       name: 'otherDescription',
       title: 'Опис іншої допомоги',
       type: 'localizedBlockContent',
-      // validation: rule => rule.required(),
     }),
   ],
   preview: {
@@ -142,9 +111,5 @@ export default defineType({
       title: 'title.uk',
       media: 'mainImage',
     },
-    // prepare(selection) {
-    //   const {author} = selection
-    //   return {...selection, subtitle: author && `by ${author}`}
-    // },
   },
 })

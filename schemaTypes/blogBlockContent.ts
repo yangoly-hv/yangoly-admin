@@ -1,9 +1,5 @@
 import {defineType, defineArrayMember} from 'sanity'
 
-/**
- * Rich text for blog blocks: headings, quotes, bullet/number lists,
- * links with normal or button style.
- */
 export default defineType({
   title: 'Blog Block Content',
   name: 'blogBlockContent',
