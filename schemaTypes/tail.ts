@@ -6,7 +6,7 @@ import {
   sourceFromLocalizedString,
 } from './objects/autoSlug'
 import {TailImageInput} from './objects/TailImageInput'
-import {validateTailImageCrop} from './objects/tailImageCrop'
+import {validateTailImageCrop, validateTailImagesArray} from './objects/tailImageCrop'
 
 type TailDocument = {
   name?: {
@@ -55,7 +55,7 @@ export default defineType({
       name: 'mainImage',
       title: 'Головне фото',
       type: 'image',
-      description: 'Завантажте фото і натисніть "Застосувати кадр 1.2:1".',
+      description: 'Завантажте фото і налаштуйте його у фіксованій рамці 1.2:1.',
       options: {
         hotspot: true,
       },
@@ -68,10 +68,11 @@ export default defineType({
       name: 'images',
       title: 'Фото',
       type: 'array',
+      validation: rule => rule.custom(validateTailImagesArray),
       of: [
         {
           type: 'image',
-          description: 'Для кожного фото натисніть "Застосувати кадр 1.2:1".',
+          description: 'Для кожного фото налаштуйте фіксовану рамку 1.2:1.',
           options: {
             hotspot: true
           },
