@@ -1,5 +1,7 @@
 import {defineField, defineType, defineArrayMember} from 'sanity'
 import { BulkImageArrayInput } from './objects/BulkImageArrayInput'
+import {ReportImageInput} from './objects/ReportImageInput'
+import {validateReportImageCrop, validateReportImagesArray} from './objects/reportImageCrop'
 import {
   AutoSlugFromReportDateInput,
   isUniqueDocumentSlug,
@@ -49,12 +51,18 @@ export default defineType({
       name: 'images',
       title: 'Фото для звіту',
       type: 'array',
+      validation: rule => rule.custom(validateReportImagesArray),
       of: [
         defineArrayMember({
           type: 'image',
+          description: 'Для кожного фото налаштуйте фіксовану рамку 13:10.',
           options: {
             hotspot: true,
           },
+          components: {
+            input: ReportImageInput,
+          },
+          validation: rule => rule.custom(validateReportImageCrop),
         }),
       ],
       options: {

@@ -2,8 +2,10 @@ import React, {useRef, useState} from 'react'
 import {Button, Card, Flex, Stack, Text} from '@sanity/ui'
 import {ArrayOfObjectsInputProps, insert, setIfMissing, useClient} from 'sanity'
 import {randomKey} from '@sanity/util/content'
+import {createReportImageCrop} from './reportImageCrop'
+import type {ReportImageValue} from './reportImageCrop'
 
-type ImageArrayItem = {
+type ImageArrayItem = ReportImageValue & {
   _key: string
   _type: 'image'
   asset?: {
@@ -39,14 +41,17 @@ export function BulkImageArrayInput(props: ArrayOfObjectsInputProps<ImageArrayIt
           filename: file.name,
         })
 
-        uploadedItems.push({
+        const nextImage: ImageArrayItem = {
           _type: 'image',
           _key: randomKey(),
           asset: {
             _type: 'reference',
             _ref: asset._id,
           },
-        })
+        }
+        const nextCrop = createReportImageCrop(nextImage, {focusX: 0.5, focusY: 0.5, zoom: 1})
+
+        uploadedItems.push({...nextImage, ...(nextCrop || {})})
       }
 
       onChange([setIfMissing([]), insert(uploadedItems, 'after', [-1])])
