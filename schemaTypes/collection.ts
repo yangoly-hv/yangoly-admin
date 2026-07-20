@@ -5,6 +5,8 @@ import {
   slugifyDocumentValue,
   sourceFromLocalizedString,
 } from './objects/autoSlug'
+import {CollectionImageInput} from './objects/CollectionImageInput'
+import {validateCollectionImageCrop} from './objects/collectionImageCrop'
 
 type CollectionDocument = {
   title?: {
@@ -52,7 +54,10 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      validation: rule => rule.required(),
+      components: {
+        input: CollectionImageInput,
+      },
+      validation: rule => rule.required().custom(validateCollectionImageCrop),
     }),
     defineField({
         name: 'amount',

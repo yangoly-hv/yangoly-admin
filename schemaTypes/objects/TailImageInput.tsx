@@ -10,6 +10,7 @@ import {
   TAIL_IMAGE_TARGET_ASPECT,
   TailImageValue,
 } from './tailImageCrop'
+import {uploadRotatedImageAsset} from './imageRotation'
 
 type TailImageInputProps = ObjectInputProps & {
   onClose?: () => void
@@ -57,6 +58,7 @@ export function TailImageInput(props: ObjectInputProps) {
   const [focusY, setFocusY] = useState(0.5)
   const [zoom, setZoom] = useState(1)
   const [uploading, setUploading] = useState(false)
+  const [rotating, setRotating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const previewUrl = hasImage
@@ -139,6 +141,35 @@ export function TailImageInput(props: ObjectInputProps) {
     inputRef.current?.click()
   }
 
+  const handleRotateClockwise = async () => {
+    if (!hasImage) return
+
+    setRotating(true)
+    setError(null)
+
+    try {
+      const asset = await uploadRotatedImageAsset(client, imageValue)
+      const nextImage: TailImageValue & {_type: 'image'} = {
+        ...(imageValue || {}),
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: asset._id,
+        } as TailImageValue['asset'],
+      }
+      const nextCrop = createFixedAspectCrop(nextImage, undefined, {focusX: 0.5, focusY: 0.5, zoom: 1})
+
+      setFocusX(0.5)
+      setFocusY(0.5)
+      setZoom(1)
+      onChange(set({...nextImage, ...(nextCrop || {})}))
+    } catch (rotateError) {
+      setError(rotateError instanceof Error ? rotateError.message : 'Не вдалося повернути фото')
+    } finally {
+      setRotating(false)
+    }
+  }
+
   const handleFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
@@ -205,11 +236,26 @@ export function TailImageInput(props: ObjectInputProps) {
                 mode="ghost"
                 tone="primary"
                 text={hasImage ? 'Замінити фото' : 'Завантажити фото'}
-                disabled={uploading}
+                disabled={uploading || rotating}
                 onClick={handleUploadClick}
               />
               {hasImage && (
-                <Button mode="ghost" tone="critical" text="Прибрати" onClick={() => onChange(unset())} />
+                <Button
+                  mode="ghost"
+                  tone="primary"
+                  text={rotating ? 'Повертаємо...' : 'Повернути на 90°'}
+                  disabled={uploading || rotating}
+                  onClick={handleRotateClockwise}
+                />
+              )}
+              {hasImage && (
+                <Button
+                  mode="ghost"
+                  tone="critical"
+                  text="Прибрати"
+                  disabled={uploading || rotating}
+                  onClick={() => onChange(unset())}
+                />
               )}
             </Flex>
           </Flex>

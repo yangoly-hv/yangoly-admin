@@ -3,36 +3,38 @@ import imageUrlBuilder from '@sanity/image-url'
 import {Box, Button, Card, Flex, Stack, Text} from '@sanity/ui'
 import {ObjectInputProps, set, unset, useClient} from 'sanity'
 import {
-  createReportImageCrop,
-  isReportImageCropValid,
-  REPORT_IMAGE_TARGET_ASPECT,
-} from './reportImageCrop'
-import type {ReportImageValue} from './reportImageCrop'
+  COLLECTION_IMAGE_TARGET_ASPECT,
+  createCollectionImageCrop,
+  isCollectionImageCropValid,
+} from './collectionImageCrop'
+import type {CollectionImageValue} from './collectionImageCrop'
 import {getCropAspect, parseImageAssetDimensions} from './tailImageCrop'
 import {uploadRotatedImageAsset} from './imageRotation'
 
-type ReportImageInputProps = ObjectInputProps & {
+type CollectionImageInputProps = ObjectInputProps & {
   onClose?: () => void
   onPathBlur?: (path: unknown[]) => void
   path?: unknown[]
 }
 
 const frameSize = {
-  width: 650,
-  height: 500,
+  width: 705,
+  height: 580,
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
-const getZoomFromCrop = (value?: ReportImageValue) => {
+const getZoomFromCrop = (value?: CollectionImageValue) => {
   const dimensions = parseImageAssetDimensions(value?.asset?._ref)
   const crop = value?.crop
 
   if (!dimensions || !crop) return 1
 
   const imageAspect = dimensions.width / dimensions.height
-  const baseWidth = imageAspect > REPORT_IMAGE_TARGET_ASPECT ? REPORT_IMAGE_TARGET_ASPECT / imageAspect : 1
-  const baseHeight = imageAspect > REPORT_IMAGE_TARGET_ASPECT ? 1 : imageAspect / REPORT_IMAGE_TARGET_ASPECT
+  const baseWidth =
+    imageAspect > COLLECTION_IMAGE_TARGET_ASPECT ? COLLECTION_IMAGE_TARGET_ASPECT / imageAspect : 1
+  const baseHeight =
+    imageAspect > COLLECTION_IMAGE_TARGET_ASPECT ? 1 : imageAspect / COLLECTION_IMAGE_TARGET_ASPECT
   const visibleWidth = 1 - (crop.left || 0) - (crop.right || 0)
   const visibleHeight = 1 - (crop.top || 0) - (crop.bottom || 0)
 
@@ -41,18 +43,18 @@ const getZoomFromCrop = (value?: ReportImageValue) => {
   return clamp(Math.max(baseWidth / visibleWidth, baseHeight / visibleHeight), 1, 4)
 }
 
-export function ReportImageInput(props: ObjectInputProps) {
+export function CollectionImageInput(props: ObjectInputProps) {
   const {onChange, value} = props
-  const {onClose, onPathBlur, path} = props as ReportImageInputProps
+  const {onClose, onPathBlur, path} = props as CollectionImageInputProps
   const client = useClient({apiVersion: '2025-01-01'})
   const builder = useMemo(() => imageUrlBuilder(client), [client])
   const rootRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const imageValue = value as ReportImageValue | undefined
+  const imageValue = value as CollectionImageValue | undefined
   const assetRef = imageValue?.asset?._ref
   const hasImage = Boolean(assetRef)
   const aspect = getCropAspect(imageValue)
-  const isValid = hasImage && isReportImageCropValid(imageValue)
+  const isValid = hasImage && isCollectionImageCropValid(imageValue)
   const [focusX, setFocusX] = useState(0.5)
   const [focusY, setFocusY] = useState(0.5)
   const [zoom, setZoom] = useState(1)
@@ -77,7 +79,7 @@ export function ReportImageInput(props: ObjectInputProps) {
   }, [assetRef])
 
   const applyCrop = (nextFocusX = focusX, nextFocusY = focusY, nextZoom = zoom) => {
-    const nextCrop = createReportImageCrop(imageValue, {
+    const nextCrop = createCollectionImageCrop(imageValue, {
       focusX: nextFocusX,
       focusY: nextFocusY,
       zoom: nextZoom,
@@ -148,15 +150,15 @@ export function ReportImageInput(props: ObjectInputProps) {
 
     try {
       const asset = await uploadRotatedImageAsset(client, imageValue)
-      const nextImage: ReportImageValue & {_type: 'image'} = {
+      const nextImage: CollectionImageValue & {_type: 'image'} = {
         ...(imageValue || {}),
         _type: 'image',
         asset: {
           _type: 'reference',
           _ref: asset._id,
-        } as ReportImageValue['asset'],
+        } as CollectionImageValue['asset'],
       }
-      const nextCrop = createReportImageCrop(nextImage, {focusX: 0.5, focusY: 0.5, zoom: 1})
+      const nextCrop = createCollectionImageCrop(nextImage, {focusX: 0.5, focusY: 0.5, zoom: 1})
 
       setFocusX(0.5)
       setFocusY(0.5)
@@ -179,15 +181,15 @@ export function ReportImageInput(props: ObjectInputProps) {
 
     try {
       const asset = await client.assets.upload('image', file, {filename: file.name})
-      const nextImage: ReportImageValue & {_type: 'image'} = {
+      const nextImage: CollectionImageValue & {_type: 'image'} = {
         ...(imageValue || {}),
         _type: 'image',
         asset: {
           _type: 'reference',
           _ref: asset._id,
-        } as ReportImageValue['asset'],
+        } as CollectionImageValue['asset'],
       }
-      const nextCrop = createReportImageCrop(nextImage, {focusX: 0.5, focusY: 0.5, zoom: 1})
+      const nextCrop = createCollectionImageCrop(nextImage, {focusX: 0.5, focusY: 0.5, zoom: 1})
 
       onChange(set({...nextImage, ...(nextCrop || {})}))
     } catch (uploadError) {
@@ -223,10 +225,10 @@ export function ReportImageInput(props: ObjectInputProps) {
           <Flex align="center" justify="space-between" gap={3} wrap="wrap">
             <Stack space={2}>
               <Text size={1} weight="semibold">
-                Фіксований кадр 13:10
+                Фіксований кадр 705:580
               </Text>
               <Text size={1} muted>
-                Фото звіту на сайті показується у цій горизонтальній рамці.
+                Фото збору на головній сторінці показується у цій горизонтальній рамці.
               </Text>
             </Stack>
 
