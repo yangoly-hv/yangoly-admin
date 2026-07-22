@@ -74,6 +74,12 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'reportFile',
+      title: 'Файл для звіту',
+      description: 'Завантажте один файл звіту.',
+      type: 'file',
+    }),
+    defineField({
       name: 'shortFoodDescription',
       title: 'Короткий опис допомоги кормом',
       type: 'localizedBlockContent',
