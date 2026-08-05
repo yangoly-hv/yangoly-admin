@@ -1,0 +1,20 @@
+export default {
+  name: 'paymentEffect',
+  title: 'Payment effect',
+  type: 'document',
+  fields: [
+    {name: 'kind', title: 'Effect', type: 'string', options: {list: ['collection', 'donator', 'donation-email']}, readOnly: true},
+    {name: 'orderReference', title: 'Order reference', type: 'string', readOnly: true},
+    {name: 'occurrenceId', title: 'Payment occurrence', type: 'string', readOnly: true},
+    {name: 'targetStatus', title: 'Target payment status', type: 'string', options: {list: ['approved', 'reversed']}, readOnly: true},
+    {name: 'status', title: 'Delivery status', type: 'string', options: {list: ['pending', 'processing', 'completed', 'failed']}, readOnly: true},
+    {name: 'attemptCount', title: 'Attempts', type: 'number', readOnly: true},
+    {name: 'nextAttemptAt', title: 'Next attempt', type: 'datetime', readOnly: true},
+    {name: 'lastAttemptAt', title: 'Last attempt', type: 'datetime', readOnly: true},
+    {name: 'completedAt', title: 'Completed at', type: 'datetime', readOnly: true},
+    {name: 'failedAt', title: 'Failed at', type: 'datetime', readOnly: true},
+    {name: 'lastErrorCode', title: 'Last error code', type: 'string', readOnly: true},
+    {name: 'createdAt', title: 'Created at', type: 'datetime', readOnly: true},
+    {name: 'updatedAt', title: 'Updated at', type: 'datetime', readOnly: true},
+  ],
+}

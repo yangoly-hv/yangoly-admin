@@ -29,12 +29,12 @@ type ImageDimensions = {
   height: number
 }
 
-type FixedAspectCropResult = {
+export type FixedAspectCropResult = {
   crop: Required<TailImageCrop>
   hotspot: Required<TailImageHotspot>
 }
 
-type FixedAspectCropOptions = {
+export type FixedAspectCropOptions = {
   focusX?: number
   focusY?: number
   zoom?: number
@@ -87,6 +87,35 @@ export const hasTailImageCropData = (value?: TailImageValue) => {
     typeof hotspot.width === 'number' &&
     typeof hotspot.height === 'number'
   )
+}
+
+export const isCropAspectWithinRange = (
+  value: TailImageValue | undefined,
+  minAspect: number,
+  maxAspect: number,
+) => {
+  if (!hasTailImageCropData(value)) return false
+
+  const aspect = getCropAspect(value)
+  return Boolean(aspect && aspect >= minAspect && aspect <= maxAspect)
+}
+
+export const formatImageNumbers = (numbers: number[]) => {
+  if (numbers.length <= 1) return numbers.join('')
+  if (numbers.length === 2) return `${numbers[0]} і ${numbers[1]}`
+
+  return `${numbers.slice(0, -1).join(', ')} і ${numbers[numbers.length - 1]}`
+}
+
+export const getInvalidImageNumbers = (
+  value: TailImageValue[] | undefined,
+  validateImage: (image?: TailImageValue) => true | string,
+) => {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .map((image, index) => (image?.asset?._ref && validateImage(image) !== true ? index + 1 : null))
+    .filter((index): index is number => typeof index === 'number')
 }
 
 const getCurrentFocusPoint = (value?: TailImageValue) => {
@@ -166,13 +195,7 @@ export const createFixedAspectCrop = (
 }
 
 export const isTailImageCropValid = (value?: TailImageValue) => {
-  if (!hasTailImageCropData(value)) return false
-
-  const aspect = getCropAspect(value)
-
-  if (!aspect) return false
-
-  return aspect >= TAIL_IMAGE_MIN_ASPECT && aspect <= TAIL_IMAGE_MAX_ASPECT
+  return isCropAspectWithinRange(value, TAIL_IMAGE_MIN_ASPECT, TAIL_IMAGE_MAX_ASPECT)
 }
 
 export const validateTailImageCrop = (value?: TailImageValue) => {
@@ -195,19 +218,8 @@ export const validateTailImageCrop = (value?: TailImageValue) => {
   return true
 }
 
-const formatImageNumbers = (numbers: number[]) => {
-  if (numbers.length <= 1) return numbers.join('')
-  if (numbers.length === 2) return `${numbers[0]} і ${numbers[1]}`
-
-  return `${numbers.slice(0, -1).join(', ')} і ${numbers[numbers.length - 1]}`
-}
-
 export const validateTailImagesArray = (value?: TailImageValue[]) => {
-  if (!Array.isArray(value)) return true
-
-  const invalidImageNumbers = value
-    .map((image, index) => (image?.asset?._ref && validateTailImageCrop(image) !== true ? index + 1 : null))
-    .filter((index): index is number => typeof index === 'number')
+  const invalidImageNumbers = getInvalidImageNumbers(value, validateTailImageCrop)
 
   if (!invalidImageNumbers.length) return true
 

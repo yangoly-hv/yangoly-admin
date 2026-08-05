@@ -12,19 +12,26 @@ import post from './post'
 import report from './reports'
 import events from './events'
 import collection from './collection'
+import collectionContribution from './collectionContribution'
 import donator from './donator'
 import perfomance from './perfomance'
 import aboutFoundation from './aboutFoundation'
-import donateOrder from './donateOrder'
+import partner from './partner'
 import reportMonthYear from './objects/reportMonthYear'
+import donateOrder from './donateOrder'
+import encryptedValue from './encryptedValue'
+import wayforpayCallback from './wayforpayCallback'
+import paymentEffect from './paymentEffect'
+import paymentOccurrence from './paymentOccurrence'
 
 export const schemaTypes = [
   reportMonthYear,
-  donateOrder,
   aboutFoundation,
   perfomance,
+  partner,
   donator,
   collection,
+  collectionContribution,
   events,
   tail,
   post,
@@ -38,4 +45,12 @@ export const schemaTypes = [
   blogTextWithImageBlock,
   blogSingleImageBlock,
   blogGalleryBlock,
+]
+
+export const paymentSchemaTypes = [
+  encryptedValue,
+  donateOrder,
+  paymentOccurrence,
+  wayforpayCallback,
+  paymentEffect,
 ]

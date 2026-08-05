@@ -2,6 +2,7 @@ import {
   createFixedAspectCrop,
   getCropAspect,
   hasTailImageCropData,
+  isCropAspectWithinRange,
 } from './tailImageCrop'
 import type {TailImageValue} from './tailImageCrop'
 
@@ -11,11 +12,7 @@ export const COLLECTION_IMAGE_MAX_ASPECT = 1.23
 
 export type CollectionImageValue = TailImageValue
 
-type FixedAspectCropOptions = {
-  focusX?: number
-  focusY?: number
-  zoom?: number
-}
+import type {FixedAspectCropOptions} from './tailImageCrop'
 
 export const createCollectionImageCrop = (
   value?: CollectionImageValue,
@@ -23,13 +20,7 @@ export const createCollectionImageCrop = (
 ) => createFixedAspectCrop(value, COLLECTION_IMAGE_TARGET_ASPECT, options)
 
 export const isCollectionImageCropValid = (value?: CollectionImageValue) => {
-  if (!hasTailImageCropData(value)) return false
-
-  const aspect = getCropAspect(value)
-
-  if (!aspect) return false
-
-  return aspect >= COLLECTION_IMAGE_MIN_ASPECT && aspect <= COLLECTION_IMAGE_MAX_ASPECT
+  return isCropAspectWithinRange(value, COLLECTION_IMAGE_MIN_ASPECT, COLLECTION_IMAGE_MAX_ASPECT)
 }
 
 export const validateCollectionImageCrop = (value?: CollectionImageValue) => {

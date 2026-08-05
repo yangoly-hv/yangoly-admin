@@ -68,6 +68,8 @@ export default defineType({
         name: 'amountCollected',
         title: 'Зібрано',
         type: 'number',
+        description: 'Оновлюється автоматично після підтвердженого платежу WayForPay.',
+        initialValue: 0,
       }),
       defineField({
         name: 'main',

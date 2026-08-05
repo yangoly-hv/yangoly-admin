@@ -17,6 +17,37 @@ export default defineType({
         type: 'number',
         validation: rule => rule.required(),
       }),
+    defineField({
+      name: 'orderReference',
+      title: 'WayForPay order reference',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'occurrenceId',
+      title: 'Payment occurrence',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'currency',
+      title: 'Currency',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'paymentStatus',
+      title: 'Payment status',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'isActive',
+      title: 'Visible in top donors',
+      type: 'boolean',
+      initialValue: true,
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {

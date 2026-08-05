@@ -1,7 +1,10 @@
 import {
   createFixedAspectCrop,
+  formatImageNumbers,
   getCropAspect,
+  getInvalidImageNumbers,
   hasTailImageCropData,
+  isCropAspectWithinRange,
 } from './tailImageCrop'
 import type {TailImageValue} from './tailImageCrop'
 
@@ -11,11 +14,7 @@ export const REPORT_IMAGE_MAX_ASPECT = 1.33
 
 export type ReportImageValue = TailImageValue
 
-type FixedAspectCropOptions = {
-  focusX?: number
-  focusY?: number
-  zoom?: number
-}
+import type {FixedAspectCropOptions} from './tailImageCrop'
 
 export const createReportImageCrop = (
   value?: ReportImageValue,
@@ -23,13 +22,7 @@ export const createReportImageCrop = (
 ) => createFixedAspectCrop(value, REPORT_IMAGE_TARGET_ASPECT, options)
 
 export const isReportImageCropValid = (value?: ReportImageValue) => {
-  if (!hasTailImageCropData(value)) return false
-
-  const aspect = getCropAspect(value)
-
-  if (!aspect) return false
-
-  return aspect >= REPORT_IMAGE_MIN_ASPECT && aspect <= REPORT_IMAGE_MAX_ASPECT
+  return isCropAspectWithinRange(value, REPORT_IMAGE_MIN_ASPECT, REPORT_IMAGE_MAX_ASPECT)
 }
 
 export const validateReportImageCrop = (value?: ReportImageValue) => {
@@ -52,19 +45,8 @@ export const validateReportImageCrop = (value?: ReportImageValue) => {
   return true
 }
 
-const formatImageNumbers = (numbers: number[]) => {
-  if (numbers.length <= 1) return numbers.join('')
-  if (numbers.length === 2) return `${numbers[0]} і ${numbers[1]}`
-
-  return `${numbers.slice(0, -1).join(', ')} і ${numbers[numbers.length - 1]}`
-}
-
 export const validateReportImagesArray = (value?: ReportImageValue[]) => {
-  if (!Array.isArray(value)) return true
-
-  const invalidImageNumbers = value
-    .map((image, index) => (image?.asset?._ref && validateReportImageCrop(image) !== true ? index + 1 : null))
-    .filter((index): index is number => typeof index === 'number')
+  const invalidImageNumbers = getInvalidImageNumbers(value, validateReportImageCrop)
 
   if (!invalidImageNumbers.length) return true
 
