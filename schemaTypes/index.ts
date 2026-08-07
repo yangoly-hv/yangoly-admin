@@ -16,6 +16,7 @@ import collectionContribution from './collectionContribution'
 import donator from './donator'
 import perfomance from './perfomance'
 import aboutFoundation from './aboutFoundation'
+import siteSettings from './siteSettings'
 import partner from './partner'
 import reportMonthYear from './objects/reportMonthYear'
 import donateOrder from './donateOrder'
@@ -26,6 +27,7 @@ import paymentOccurrence from './paymentOccurrence'
 
 export const schemaTypes = [
   reportMonthYear,
+  siteSettings,
   aboutFoundation,
   perfomance,
   partner,

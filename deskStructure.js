@@ -1,11 +1,24 @@
 // deskStructure.js
 
-const singletonTypes = new Set(['events', 'perfomance', 'aboutFoundation']);
+const singletonTypes = new Set([
+  'events',
+  'perfomance',
+  'aboutFoundation',
+  'siteSettings',
+]);
 
 export const myStructure = (S) =>
   S.list()
     .title('Категорії')
     .items([
+      S.listItem()
+        .title('Налаштування сайту')
+        .child(
+          S.document()
+            .schemaType('siteSettings')
+            .documentId('siteSettings')
+        ),
+
       S.listItem()
         .title('Заходи')
         .child(S.document().schemaType('events').documentId('events')),
