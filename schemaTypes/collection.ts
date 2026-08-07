@@ -75,8 +75,6 @@ export default defineType({
         name: 'monobankJarUrl',
         title: 'Посилання на банку Monobank',
         type: 'url',
-        description:
-          'Публічне посилання на банку (наприклад https://send.monobank.ua/jar/...). Використовується на головній для кнопки Mono. Токен API зберігається лише на сервері сайту, не тут. Змінюйте при новій місячній банці.',
         validation: (rule) =>
           rule.uri({
             scheme: ['https'],
