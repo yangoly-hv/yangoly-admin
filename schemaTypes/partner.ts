@@ -23,11 +23,32 @@ export default defineType({
       type: 'url',
       validation: rule => rule.required().uri({scheme: ['http', 'https'], allowRelative: false}),
     }),
+    defineField({
+      name: 'sortOrder',
+      title: 'Порядок відображення',
+      type: 'number',
+      description: 'Менше число — вище в списку на сторінці партнерства',
+      validation: rule => rule.required().integer().min(0),
+    }),
+  ],
+  orderings: [
+    {
+      title: 'Порядок відображення',
+      name: 'sortOrderAsc',
+      by: [{field: 'sortOrder', direction: 'asc'}],
+    },
   ],
   preview: {
     select: {
       title: 'name',
       media: 'logo',
+      sortOrder: 'sortOrder',
     },
+    prepare: ({title, media, sortOrder}) => ({
+      title,
+      media,
+      subtitle:
+        typeof sortOrder === 'number' ? `Порядок: ${sortOrder}` : 'Без порядку',
+    }),
   },
 })
