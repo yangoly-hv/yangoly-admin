@@ -72,13 +72,25 @@ export default defineType({
         initialValue: 0,
       }),
       defineField({
-        name: 'monobankJarUrl',
-        title: 'Посилання на банку Monobank',
-        type: 'url',
+        name: 'monobankLongJarId',
+        title: 'Monobank longJarId',
+        type: 'string',
+        description:
+          'Ідентифікатор з віджета банки («Віджет для стрімів» → параметр longJarId). Не коротке посилання send.monobank.ua.',
         validation: (rule) =>
-          rule.uri({
-            scheme: ['https'],
-            allowRelative: false,
+          rule.custom((value) => {
+            if (value == null || value === '') return true
+            const trimmed = value.trim()
+            if (trimmed !== value) {
+              return 'Приберіть пробіли на початку/в кінці'
+            }
+            if (/^https?:\/\//i.test(trimmed) || trimmed.includes('/') || trimmed.includes('?')) {
+              return 'Вставте лише longJarId (рядок), не URL'
+            }
+            if (!/^[A-Za-z0-9_-]{8,64}$/.test(trimmed)) {
+              return 'Очікується longJarId: 8–64 символи (літери, цифри, _ або -)'
+            }
+            return true
           }),
       }),
       defineField({
