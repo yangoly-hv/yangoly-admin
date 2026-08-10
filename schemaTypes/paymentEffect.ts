@@ -3,7 +3,7 @@ export default {
   title: 'Payment effect',
   type: 'document',
   fields: [
-    {name: 'kind', title: 'Effect', type: 'string', options: {list: ['collection', 'donator', 'donation-email']}, readOnly: true},
+    {name: 'kind', title: 'Effect', type: 'string', options: {list: ['collection', 'tail', 'donator', 'donation-email']}, readOnly: true},
     {name: 'orderReference', title: 'Order reference', type: 'string', readOnly: true},
     {name: 'occurrenceId', title: 'Payment occurrence', type: 'string', readOnly: true},
     {name: 'targetStatus', title: 'Target payment status', type: 'string', options: {list: ['approved', 'reversed']}, readOnly: true},

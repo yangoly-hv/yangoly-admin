@@ -13,6 +13,7 @@ import report from './reports'
 import events from './events'
 import collection from './collection'
 import collectionContribution from './collectionContribution'
+import tailContribution from './tailContribution'
 import donator from './donator'
 import perfomance from './perfomance'
 import aboutFoundation from './aboutFoundation'
@@ -34,6 +35,7 @@ export const schemaTypes = [
   donator,
   collection,
   collectionContribution,
+  tailContribution,
   events,
   tail,
   post,

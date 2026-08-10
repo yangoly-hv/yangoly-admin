@@ -5,8 +5,11 @@ import {schemaTypes} from './schemaTypes'
 import {paymentSchemaTypes} from './schemaTypes'
 import {myStructure} from './deskStructure'
 import {paymentsStructure} from './paymentsDeskStructure'
+import {TailDonationBadge} from './schemaTypes/tailDonationBadge'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'vintpwoh'
+
+const contributionTypes = new Set(['collectionContribution', 'tailContribution'])
 
 export default defineConfig([
   {
@@ -18,7 +21,11 @@ export default defineConfig([
     plugins: [structureTool({structure: myStructure}), visionTool()],
     document: {
       actions: (previousActions, context) =>
-        context.schemaType === 'collectionContribution' ? [] : previousActions,
+        contributionTypes.has(context.schemaType) ? [] : previousActions,
+      badges: (previousBadges, context) =>
+        context.schemaType === 'tail'
+          ? [TailDonationBadge, ...previousBadges]
+          : previousBadges,
     },
     schema: {types: schemaTypes},
   },

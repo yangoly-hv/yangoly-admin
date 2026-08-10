@@ -128,11 +128,33 @@ export default defineType({
         return true 
       })
     }),
+    defineField({
+      name: 'amountCollected',
+      title: 'Зібрано (цільові донати)',
+      type: 'number',
+      description:
+        'Оновлюється автоматично після підтвердженої разової допомоги WayForPay. Встановіть 0 після опрацювання, щоб прибрати позначку.',
+      initialValue: 0,
+    }),
   ],
   preview: {
     select: {
       title: 'name.uk',
       media: 'mainImage',
+      amountCollected: 'amountCollected',
+    },
+    prepare({title, media, amountCollected}) {
+      const collected =
+        typeof amountCollected === 'number' && Number.isFinite(amountCollected)
+          ? amountCollected
+          : 0
+      const hasDonation = collected > 0
+
+      return {
+        title: hasDonation ? `⚠ ${title || 'Без імені'}` : title || 'Без імені',
+        subtitle: hasDonation ? `Цільовий донат: ${collected} грн` : undefined,
+        media,
+      }
     },
   },
 })

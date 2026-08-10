@@ -7,6 +7,14 @@ const singletonTypes = new Set([
   'siteSettings',
 ]);
 
+const hiddenDocumentTypes = new Set([
+  ...singletonTypes,
+  'donateOrder',
+  'tail',
+  'tailContribution',
+  'collectionContribution',
+]);
+
 export const myStructure = (S) =>
   S.list()
     .title('Категорії')
@@ -39,9 +47,35 @@ export const myStructure = (S) =>
             .documentId('aboutFoundation')
         ),
 
-      // Важное: исключаем singleton-документы из списка всех типов
+      S.listItem()
+        .title('Хвостики')
+        .schemaType('tail')
+        .child(
+          S.list()
+            .title('Хвостики')
+            .items([
+              S.listItem()
+                .title('Усі хвостики')
+                .schemaType('tail')
+                .child(
+                  S.documentTypeList('tail')
+                    .title('Усі хвостики')
+                    .defaultOrdering([{field: '_createdAt', direction: 'desc'}])
+                ),
+              S.listItem()
+                .title('З цільовими донатами')
+                .schemaType('tail')
+                .child(
+                  S.documentTypeList('tail')
+                    .title('З цільовими донатами')
+                    .filter('_type == "tail" && amountCollected > 0')
+                    .defaultOrdering([{field: 'amountCollected', direction: 'desc'}])
+                ),
+            ])
+        ),
+
+      // Важное: исключаем singleton-документы и служебные типы из списка всех типов
       ...S.documentTypeListItems().filter(
-        (item) => !singletonTypes.has(item.getId()) &&
-        item.getId() !== 'donateOrder'
+        (item) => !hiddenDocumentTypes.has(item.getId())
       ),
     ]);
