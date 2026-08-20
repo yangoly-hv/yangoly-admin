@@ -1,4 +1,5 @@
 import {defineField, defineType, type Rule} from 'sanity'
+import {parseMonobankJarUrl} from './objects/monobankJarUrl'
 
 const socialHostAllowlists = {
   instagram: ['instagram.com'],
@@ -39,6 +40,20 @@ export default defineType({
   title: 'Налаштування сайту',
   type: 'document',
   fields: [
+    defineField({
+      name: 'monobankJarUrl',
+      title: 'Банка Monobank (разова допомога)',
+      type: 'url',
+      description:
+        'Публічне посилання send.monobank.ua/jar/… для кнопок «Разова допомога» та форми в хедері. Не плутати з longJarId головного збору.',
+      validation: (rule) =>
+        rule.uri({scheme: ['http', 'https'], allowRelative: false}).custom((value: unknown) => {
+          if (value == null || value === '') return true
+          return parseMonobankJarUrl(value)
+            ? true
+            : 'Очікується посилання виду https://send.monobank.ua/jar/…'
+        }),
+    }),
     defineField({
       name: 'instagram',
       title: 'Instagram',
