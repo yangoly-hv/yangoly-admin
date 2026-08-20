@@ -27,7 +27,8 @@ export default defineType({
       name: 'sortOrder',
       title: 'Порядок відображення',
       type: 'number',
-      description: 'Менше число — вище в списку на сторінці партнерства',
+      description:
+        'Менше число — вище в списку. За однакового порядку новіші зміни показуються вище.',
       validation: rule => rule.required().integer().min(0),
     }),
   ],
@@ -35,7 +36,10 @@ export default defineType({
     {
       title: 'Порядок відображення',
       name: 'sortOrderAsc',
-      by: [{field: 'sortOrder', direction: 'asc'}],
+      by: [
+        {field: 'sortOrder', direction: 'asc'},
+        {field: '_updatedAt', direction: 'desc'},
+      ],
     },
   ],
   preview: {
